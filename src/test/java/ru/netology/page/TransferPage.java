@@ -12,15 +12,19 @@ public class TransferPage {
     private SelenideElement fromAccount = $("[data-test-id=from] input");
     private SelenideElement clickReplenish = $("[data-test-id=action-transfer]");
 
-    public void transferMoney(int amount, String from) {
+    //перевод
+    public void transferMoney(int amount, DataHelper.CardsInfo from) {
         sumAmount.setValue(valueOf(amount));
         fromAccount.setValue(String.valueOf(from));
         clickReplenish.click();
+        new DashboardPage();
     }
 
-    public void unsuccessfulTransfer() {
-
-        $("[data-test-id=error-notification]").should(Condition.text("Ошибка"));
+    public void errorLimit() {
+        $(".notification__content").should(Condition.exactText("Ошибка"));
     }
 
+    public void invalidCard() {
+        $(".notification__content").should(Condition.text("Ошибка! Произошла ошибка"));
+    }
 }

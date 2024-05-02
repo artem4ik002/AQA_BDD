@@ -19,6 +19,7 @@ dependencies {
     testImplementation 'com.codeborne:selenide:6.12.2'
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
     testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.3'
+    //testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.12'
     testCompileOnly 'org.projectlombok:lombok:1.18.28'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
     testImplementation("io.github.bonigarcia:webdrivermanager:5.3.3")

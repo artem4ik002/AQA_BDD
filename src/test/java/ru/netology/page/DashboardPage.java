@@ -4,30 +4,39 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import lombok.val;
 
-import static com.codeborne.selenide.Condition.attribute;
-import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static ru.netology.data.DataHelper.getCard;
 
 public class DashboardPage {
+
     private SelenideElement heading = $("[data-test-id=dashboard]");
-    private static ElementsCollection cards = $$(".list__item div");
+    private static SelenideElement firstCardButton = $("[data-test-id='92df3f1c-a033-48e6-8390-206f6b1f56c0'] .button");
+    private static SelenideElement secondCardButton = $("[data-test-id='0f3f5c2a-249e-4c3d-8287-09f7a039391d'] .button");
+
+    private ElementsCollection cards = $$(".list__item div");
     private final String balanceStart = "баланс: ";
     private final String balanceFinish = " р.";
 
     public DashboardPage() {
-        heading.shouldBe(visible);
     }
 
-    public static TransferPage pushCardButton(int index) {
-        cards.findBy(attribute("data-test-id", getCard(index).getCardId()))
-                .find("[data-test-id=action-deposit]").click();
+    public static TransferPage pushFirstCardButton() {
+        firstCardButton.click();
         return new TransferPage();
     }
 
-    public int getCardBalance(int number) {
-        val text = cards.findBy(attribute("data-test-id", getCard(number).getCardId())).text();
+    public static TransferPage pushSecondCardButton() {
+        secondCardButton.click();
+        return new TransferPage();
+    }
+
+    public int getFirstCardBalance() {
+        val text = cards.first().text();
+        return extractBalance(text);
+    }
+
+    public int getSecondCardBalance() {
+        val text = cards.last().text();
         return extractBalance(text);
     }
 
@@ -37,6 +46,4 @@ public class DashboardPage {
         val value = text.substring(start + balanceStart.length(), finish);
         return Integer.parseInt(value);
     }
-
-
 }
