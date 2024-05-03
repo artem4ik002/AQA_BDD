@@ -1,9 +1,14 @@
 package ru.netology.test;
 
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.chrome.ChromeOptions;
 import ru.netology.page.DashboardPage;
 import ru.netology.page.LoginPage;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,4 +60,17 @@ public class MoneyTransferTest {
         assertEquals(secondCardBalance, actualBalanceSecondCard);
     }
 
+    @BeforeEach
+    void DisablinPasswordVerificationInChrome() {
+//        Выключение опции проверки пароля в Chrome
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        Map<String, Object> prefs = new HashMap<String, Object>();
+        prefs.put("credentials_enable_service", false);
+        prefs.put("password_manager_enabled", false);
+        options.setExperimentalOption("prefs", prefs);
+        Configuration.browserCapabilities = options;
+
+        open("http://localhost:9999");
+    }
 }
