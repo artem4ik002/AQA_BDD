@@ -4,27 +4,34 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.data.DataHelper;
 
+import java.time.Duration;
+
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static java.lang.String.valueOf;
 
 public class TransferPage {
-    private SelenideElement sumAmount = $("[data-test-id=amount] input");
-    private SelenideElement fromAccount = $("[data-test-id=from] input");
-    private SelenideElement clickReplenish = $("[data-test-id=action-transfer]");
 
-    //перевод
-    public void transferMoney(int amount, DataHelper.CardsInfo from) {
-        sumAmount.setValue(valueOf(amount));
-        fromAccount.setValue(String.valueOf(from));
-        clickReplenish.click();
-        new DashboardPage();
+    private final SelenideElement transferButton = $("[data-test-id=action-transfer]");
+    private final SelenideElement amountInputNew = $("[data-test-id=amount] input");
+    private final SelenideElement fromInput = $("[data-test-id=from] input");
+    private final SelenideElement transferHead = $(byText("Пополнение карты"));
+    private final SelenideElement errorMessage = $("[data-test-id=action-cancel]");
+
+    public TransferPage() {
+        transferHead.shouldBe(Condition.visible);
     }
 
-    public void errorLimit() {
-        $(".notification__content").should(Condition.exactText("Ошибка"));
+    public DashboardPage makeValidTransfer(String amountToTransfer, DataHelper.CardInfo cardInfo) {
+        makeTransfer(amountToTransfer, cardInfo);
+        return new DashboardPage();
     }
 
-    public void invalidCard() {
-        $(".notification__content").should(Condition.text("Ошибка! Произошла ошибка"));
+    public void makeTransfer(String amountToTransfer, DataHelper.CardInfo cardInfo) {
+        amountInputNew.setValue(amountToTransfer);
+        fromInput.setValue(cardInfo.getCardNumber());
+        transferButton.click();
+    }
+    public void findErrorMessage(String expectedText) {
+        errorMessage.shouldHave(Condition.exactText(expectedText), Duration.ofSeconds(15)).shouldBe(Condition.visible);
     }
 }
